@@ -164,8 +164,8 @@ def lectureinsert():
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
-    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
-                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
+        db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                             passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
         cursor = db.cursor()
 
         ## 넘겨받은 lecturename
