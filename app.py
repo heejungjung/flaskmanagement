@@ -22,7 +22,7 @@ def student():
     # 전체 페이지 구하기
     cursor.execute("SELECT COUNT(*) from student")
     tot_count = cursor.fetchone()[0]
-    total_page = round(tot_count / per_page)
+    total_page = int(tot_count / per_page) + 1
 
     query = "SELECT * FROM student LIMIT %s OFFSET %s;"
     cursor.execute(query, (per_page, (page-1) * per_page))
@@ -129,7 +129,7 @@ def lecture():
     # 전체 페이지 구하기
     cursor.execute("SELECT COUNT(*) from lecture")
     tot_count = cursor.fetchone()[0]
-    total_page = round(tot_count / per_page)
+    total_page = int(tot_count / per_page) + 1
 
     query = "SELECT * FROM lecture l JOIN teacher t ON l.lecture_teacher = t.teacher_id ORDER BY l.lecture_id LIMIT %s OFFSET %s;"
     cursor.execute(query, (per_page, (page-1) * per_page))

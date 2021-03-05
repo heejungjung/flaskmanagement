@@ -32,9 +32,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-            {% else %}
-                <h3>수업 데이터가 존재하지 않습니다.</h3>
-            {% endif %}
             <div>
                 <ul class="pagination justify-content-center">
                     {% if block_start - 1 > 0 %}
@@ -55,6 +52,9 @@
                     {% endif %}
                 </ul>
             </div>
+            {% else %}
+                <h3>수업 데이터가 존재하지 않습니다.</h3>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
