@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static',filename='img/favicon.png') }}">
+    <title>Codestates 수업 등록</title>
+    <link href="{{ url_for('static',filename='css/styles.css') }}" rel="stylesheet" />
+</head>
+<body style="height: 100vh;display: flex;">
+    <div class="masthead bg-primary text-white text-center" style="flex: 1;">
+        <div class="container d-flex align-items-center flex-column">
+            <!-- Masthead Heading-->
+            <h1 class="masthead-heading text-uppercase mb-0">수업 등록</h1>
+            <!-- Icon Divider-->
+            <div class="divider-custom divider-light">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+            <!-- register form -->
+            <form action="/teacherinsert" method="POST">
+                <div class="form-group">
+                  <label for="teachername"> 선생님 성함 </label>
+                  <input type="text" class="form-control" name="teachername" id="teachername">
+                </div>
+                <button type="submit" class="btn btn-light">등록</button>
+                <button type="button" onclick="location.href='/teacher'" class="btn btn-light">돌아가기</button>
+            </form>
+        </div>
+    </div>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Third party plugin JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="{{ url_for('static',filename='js/scripts.js') }}"></script>
+</body>
+</html>
