@@ -11,7 +11,8 @@ def index():
 
 @app.route('/student')
 def student():
-    db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
     cursor = db.cursor()
 
     # 페이지 값 (디폴트값 = 1)
@@ -66,7 +67,8 @@ def stdinsert():
 
         sql = "INSERT INTO student (std_name,std_gender,std_phone,std_birth,std_register) VALUES (%s,%s,%s,%s,%s)"
 
-        db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+        db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                             passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
         cursor = db.cursor()
         cursor.execute(sql,(stdname, stdgender, stdphone, stdbirth, time.strftime('%y-%m-%d %H:%M:%S')))
         db.commit()
@@ -77,7 +79,8 @@ def stdinsert():
 @app.route("/stddelete/<id>")
 def stddelete(id):
     sql = "DELETE FROM student WHERE std_id = "+id
-    db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
     cursor = db.cursor()
     cursor.execute(sql)
     db.commit()
@@ -87,7 +90,8 @@ def stddelete(id):
 @app.route("/stdupdate/<id>", methods=["GET", "POST"])
 def stdupdate(id):
     sql = "SELECT * FROM student WHERE std_id = "+id
-    db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
     cursor = db.cursor()
     cursor.execute(sql)
     data_list = cursor.fetchall()
@@ -114,7 +118,8 @@ def stdupdate(id):
 
 @app.route('/lecture')
 def lecture():
-    db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
     cursor = db.cursor()
 
     # 페이지 값 (디폴트값 = 1)
@@ -146,7 +151,8 @@ def lecture():
 
 @app.route('/lectureinsertform')
 def lectureinsertform():
-    db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
     cursor = db.cursor()
     cursor.execute("SELECT * FROM teacher")
     data_list = cursor.fetchall()
@@ -158,7 +164,8 @@ def lectureinsert():
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
-        db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
         cursor = db.cursor()
 
         ## 넘겨받은 lecturename
@@ -180,7 +187,8 @@ def lectureinsert():
 @app.route("/lecturedelete/<id>")
 def lecturedelete(id):
     sql = "DELETE FROM lecture WHERE lecture_id = "+id
-    db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
     cursor = db.cursor()
     cursor.execute(sql)
     db.commit()
@@ -190,7 +198,8 @@ def lecturedelete(id):
 @app.route("/lectureupdate/<id>", methods=["GET", "POST"])
 def lectureupdate(id):
     sql = "SELECT * FROM lecture WHERE lecture_id = "+id
-    db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
     cursor = db.cursor()
     cursor.execute(sql)
     data_list = cursor.fetchall()
@@ -218,7 +227,8 @@ def lectureupdate(id):
 
 @app.route('/teacher')
 def teacher():
-    db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
     cursor = db.cursor()
 
     # 페이지 값 (디폴트값 = 1)
@@ -263,7 +273,8 @@ def teacherinsert():
 
         sql = "INSERT INTO teacher (teacher_name) VALUES (%s)"
 
-        db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+        db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                             passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
         cursor = db.cursor()
         cursor.execute(sql,(teachername))
         db.commit()
@@ -274,7 +285,8 @@ def teacherinsert():
 @app.route("/teacherdelete/<id>")
 def teacherdelete(id):
     sql = "DELETE FROM teacher WHERE teacher_id = "+id
-    db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
     cursor = db.cursor()
     cursor.execute(sql)
     db.commit()
@@ -284,7 +296,8 @@ def teacherdelete(id):
 @app.route("/teacherupdate/<id>", methods=["GET", "POST"])
 def teacherupdate(id):
     sql = "SELECT * FROM teacher WHERE teacher_id = "+id
-    db = pymysql.connect(host="localhost", user="root", passwd="rootroot", db="student", charset="utf8")
+    db = pymysql.connect(host="us-cdbr-east-03.cleardb.com", user="bbdaa9fadb155b",
+                         passwd="a8612018", db="heroku_77fc15d70b36c03", charset="utf8")
     cursor = db.cursor()
     cursor.execute(sql)
     data_list = cursor.fetchall()
