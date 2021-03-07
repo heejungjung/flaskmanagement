@@ -4,7 +4,7 @@
 😉 [Come visit!](https://codestatesflaskmanagement.herokuapp.com/)
 
 ## ✨ DB ✨
-![DB](https://user-images.githubusercontent.com/28649385/110152265-d7d64b80-7e24-11eb-8c96-59811dc7306b.JPG)
+![DB](https://user-images.githubusercontent.com/28649385/110238134-2699f780-7f83-11eb-8f76-d70366253efb.JPG)
 
 ## ✨ Screenshots ✨
 
