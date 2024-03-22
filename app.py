@@ -9,8 +9,8 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/student')
-def student():
+@app.route('/rqt')
+def rqt():
     db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
                           password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
     cursor = db.cursor()
@@ -20,11 +20,11 @@ def student():
     # 한 페이지당 개수
     per_page = 5
     # 전체 페이지 구하기
-    cursor.execute("SELECT COUNT(*) from student")
+    cursor.execute("SELECT COUNT(*) from public.request")
     tot_count = cursor.fetchone()[0]
     total_page = int(tot_count / per_page) + 1
 
-    query = "SELECT * FROM student LIMIT %s OFFSET %s;"
+    query = "SELECT * FROM public.request LIMIT %s OFFSET %s;"
     cursor.execute(query, (per_page, (page-1) * per_page))
     data_list = cursor.fetchall()
     print(data_list)
@@ -37,59 +37,56 @@ def student():
     block_start = (block_size * block_num) + 1
     # 현재 블럭의 맨 끝 페이지 넘버 (첫 번째 블럭이라면, block_end = 5)
     block_end = block_start + (block_size - 1)
-
     db.close()
-    return render_template("student.html",data_list=data_list,per_page=per_page,page=page,
+    return render_template("rqt.html",data_list=data_list,per_page=per_page,page=page,
                            block_start=block_start,block_end=block_end,total_page=total_page,tot_count=tot_count)
 
 
-@app.route('/stdinsertform')
-def stdinsertform():
-    return render_template('stdinsertform.html')
+@app.route('/rqtinsertform')
+def rqtinsertform():
+    return render_template('rqtinsertform.html')
 
-@app.route('/stdinsert', methods=['POST', 'GET'])
-def stdinsert():
+@app.route('/rqtinsert', methods=['POST', 'GET'])
+def rqtinsert():
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
-        ## 넘겨받은 stdname
-        stdname = request.form.get('stdname')
-        ## 넘겨받은 stdgender
-        stdgender = request.form.get('stdgender')
-        ## 넘겨받은 stdphone
-        stdphone = request.form.get('stdphone')
-        ## 넘겨받은 stdbirth
-        stdbirth = request.form.get('stdbirth')
-        print(stdname)
-        print(stdgender)
-        print(stdphone)
-        print(stdbirth)
+        ## 넘겨받은 request_delivery_date
+        request_delivery_date = request.form.get('request_delivery_date')
+        ## 넘겨받은 request_title
+        request_title = request.form.get('request_title')
+        ## 넘겨받은 request_purpose
+        request_purpose = request.form.get('request_purpose')
+        ## 넘겨받은 request_team
+        request_team = request.form.get('request_team')
+        ## 넘겨받은 request_member
+        request_member = request.form.get('request_member')
 
-        sql = "INSERT INTO student (std_name,std_gender,std_phone,std_birth,std_register) VALUES (%s,%s,%s,%s,%s)"
+        sql = "INSERT INTO PUBLIC.REQUEST (BASE_DATE, REQUEST_DELIVERY_DATE, REQUEST_TITLE, REQUEST_PURPOSE, REQUEST_TEAM, REQUEST_MEMBER, REQUEST_DATE) VALUES (%s,%s,%s,%s,%s,%s,%s)"
 
         db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
                               password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
         cursor = db.cursor()
-        cursor.execute(sql,(stdname, stdgender, stdphone, stdbirth, time.strftime('%y-%m-%d %H:%M:%S')))
+        cursor.execute(sql,(time.strftime('%Y-%m-%d'), request_delivery_date, request_title, request_purpose, request_team, request_member, time.strftime('%Y-%m-%d %H:%M:%S')))
         db.commit()
         db.close()
 
-        return redirect('/student')
+        return redirect('/rqt')
 
-@app.route("/stddelete/<id>")
-def stddelete(id):
-    sql = "DELETE FROM student WHERE std_id = "+id
+@app.route("/rqtdelete/<id>")
+def rqtdelete(id):
+    sql = "DELETE FROM PUBLIC.REQUEST WHERE request_id = "+id
     db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
                           password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
     cursor = db.cursor()
     cursor.execute(sql)
     db.commit()
     db.close()
-    return redirect('/student')
+    return redirect('/rqt')
 
-@app.route("/stdupdate/<id>", methods=["GET", "POST"])
-def stdupdate(id):
-    sql = "SELECT * FROM student WHERE std_id = "+id
+@app.route("/rqtupdate/<id>", methods=["GET", "POST"])
+def rqtupdate(id):
+    sql = "SELECT * FROM public.request WHERE request_id = "+id
     db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
                           password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
     cursor = db.cursor()
@@ -98,23 +95,29 @@ def stdupdate(id):
 
     if request.method == "GET":
         db.close()
-        return render_template("stdupdateform.html", data_list=data_list)
+        return render_template("rqtupdateform.html", data_list=data_list)
     elif request.method == 'POST':
-        ## 넘겨받은 stdname
-        stdname = request.form.get('stdname')
-        ## 넘겨받은 stdgender
-        stdgender = request.form.get('stdgender')
-        ## 넘겨받은 stdphone
-        stdphone = request.form.get('stdphone')
-        ## 넘겨받은 stdbirth
-        stdbirth = request.form.get('stdbirth')
+        ## 넘겨받은 request_delivery_date
+        request_delivery_date = request.form.get('request_delivery_date')
+        ## 넘겨받은 request_title
+        request_title = request.form.get('request_title')
+        ## 넘겨받은 request_purpose
+        request_purpose = request.form.get('request_purpose')
+        ## 넘겨받은 request_team
+        request_team = request.form.get('request_team')
+        ## 넘겨받은 request_member
+        request_member = request.form.get('request_member')
+        ## 넘겨받은 request_executor
+        request_executor = request.form.get('request_executor')
+        ## 넘겨받은 file_link
+        file_link = request.form.get('file_link')
 
-        sql = "UPDATE student SET std_name=%s,std_gender=%s,std_phone=%s,std_birth=%s WHERE std_id = "+id
-        cursor.execute(sql,(stdname, stdgender, stdphone, stdbirth))
+        sql = "UPDATE public.request SET request_delivery_date=%s,request_title=%s,request_purpose=%s,request_team=%s,request_member=%s,request_executor=%s,file_link=%s WHERE request_id = "+id
+        cursor.execute(sql,(request_delivery_date, request_title, request_purpose, request_team, request_member, request_executor, file_link))
         db.commit()
         db.close()
 
-        return redirect('/student')
+        return redirect('/rqt')
 
 @app.route('/lecture')
 def lecture():
