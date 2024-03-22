@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static',filename='img/favicon.png') }}">
-    <title>Codestates 학생 수정</title>
+    <title>Data Request Edit</title>
     <link href="{{ url_for('static',filename='css/styles.css') }}" rel="stylesheet" />
 </head>
 <body>
     <div class="masthead bg-primary text-white text-center">
         <div class="container d-flex align-items-center flex-column">
             <!-- Masthead Heading-->
-            <h1 class="masthead-heading text-uppercase mb-0">학생 수정</h1>
+            <h1 class="masthead-heading text-uppercase mb-0">Data Request Edit</h1>
             <!-- Icon Divider-->
             <div class="divider-custom divider-light">
                 <div class="divider-custom-line"></div>
@@ -20,29 +20,45 @@
             </div>
             <!-- register form -->
             {% for i in data_list %}
-            <form action="/stdupdate/{{i[0]}}" method="POST">
+            <form action="/rqtupdate/{{i[1]}}" method="POST">
                 <div class="form-group">
-                  <label for="stdname"> 이 름 </label>
-                  <input type="text" class="form-control" name="stdname" id="stdname" value={{i[1]}}>
+                  <label for="request_delivery_date"> Delivery Date </label>
+                  <input type="date" class="form-control" name="request_delivery_date" id="request_delivery_date" value={{i[2]}}>
                 </div>
                 <div class="form-group">
-                  <label for="stdgender"> 성 별 </label>
-                  <select type="text" id="stdgender" name="stdgender" class="form-control">
-                    <option selected>Choose...</option>
-                    <option>F</option>
-                    <option>M</option>
+                    <label for="request_title"> Title </label>
+                    <input type="text" class="form-control" name="request_title" id="request_title" value={{i[3]}}>
+                </div>
+                <div class="form-group">
+                    <label for="request_purpose"> Purpose </label>
+                    <input type="text" class="form-control" name="request_purpose" id="request_purpose" value={{i[4]}}>
+                </div>
+                <div class="form-group">
+                  <label for="request_team"> Team </label>
+                  <select type="text" id="request_team" name="request_team" class="form-control">
+                    <option selected>{{i[5]}}</option>
+                    <option>Marketing</option>
+                    <option>Sales</option>
+                    <option>UI/UX</option>
+                    <option>Insight</option>
+                    <option>SCM</option>
+                    <option>IT</option>
                   </select>
                 </div>
                 <div class="form-group">
-                    <label for="stdphone"> 연락처 </label>
-                    <input type="text" class="form-control" name="stdphone" id="stdphone" value={{i[3]}}>
+                    <label for="request_member"> Member </label>
+                    <input type="text" name="request_member" id="request_member" class="form-control" value={{i[6]}}>
                 </div>
                 <div class="form-group">
-                    <label for="stdbirth"> 생 일 </label>
-                    <input type="date" name="stdbirth" id="stdbirth" class="form-control" value={{i[4]}}>
+                    <label for="request_executor"> Executor </label>
+                    <input type="text" name="request_executor" id="request_executor" class="form-control" value={{i[8]}}>
                 </div>
-                <button type="submit" class="btn btn-light">수정</button>
-                <button type="button" onclick="location.href='/student'" class="btn btn-light">돌아가기</button>
+                <div class="form-group">
+                    <label for="file_link"> File Link </label>
+                    <input type="text" name="file_link" id="file_link" class="form-control" value={{i[9]}}>
+                </div>
+                <button type="submit" class="btn btn-light">Edit</button>
+                <button type="button" onclick="location.href='/rqt'" class="btn btn-light">Cancel</button>
             </form>
             {% endfor %}
         </div>

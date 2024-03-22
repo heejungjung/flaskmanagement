@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static',filename='img/favicon.png') }}">
-    <title>Codestates 학생 등록</title>
+    <title>Data Request Form</title>
     <link href="{{ url_for('static',filename='css/styles.css') }}" rel="stylesheet" />
 </head>
 <body>
     <div class="masthead bg-primary text-white text-center">
         <div class="container d-flex align-items-center flex-column">
             <!-- Masthead Heading-->
-            <h1 class="masthead-heading text-uppercase mb-0">학생 등록</h1>
+            <h1 class="masthead-heading text-uppercase mb-0">Data Request Form</h1>
             <!-- Icon Divider-->
             <div class="divider-custom divider-light">
                 <div class="divider-custom-line"></div>
@@ -19,29 +19,37 @@
                 <div class="divider-custom-line"></div>
             </div>
             <!-- register form -->
-            <form action="/stdinsert" method="POST">
+            <form action="/rqtinsert" method="POST">
                 <div class="form-group">
-                  <label for="stdname"> 이 름 </label>
-                  <input type="text" class="form-control" name="stdname" id="stdname" placeholder="홍길동">
+                    <label for="request_delivery_date"> Delivery Date </label>
+                    <input type="date" name="request_delivery_date" id="request_delivery_date" class="form-control">
                 </div>
                 <div class="form-group">
-                  <label for="stdgender"> 성 별 </label>
-                  <select type="text" id="stdgender" name="stdgender" class="form-control">
+                  <label for="request_title"> Title </label>
+                  <input type="text" class="form-control" name="request_title" id="request_title" placeholder="ex.Montly Website Visitors">
+                </div>
+                <div class="form-group">
+                  <label for="request_purpose"> Purpose </label>
+                  <input type="text" class="form-control" name="request_purpose" id="request_purpose" placeholder="ex.Analysis">
+                </div>
+                <div class="form-group">
+                  <label for="request_team"> Team </label>
+                  <select type="text" id="request_team" name="request_team" class="form-control">
                     <option selected>Choose...</option>
-                    <option>F</option>
-                    <option>M</option>
+                    <option>Marketing</option>
+                    <option>Sales</option>
+                    <option>UI/UX</option>
+                    <option>Insight</option>
+                    <option>SCM</option>
+                    <option>IT</option>
                   </select>
                 </div>
                 <div class="form-group">
-                    <label for="stdphone"> 연락처 </label>
-                    <input type="text" class="form-control" name="stdphone" id="stdphone" placeholder="-없이 입력하세요.">
+                  <label for="request_member"> Member </label>
+                  <input type="text" class="form-control" name="request_member" id="request_member" placeholder="ex.John Lee">
                 </div>
-                <div class="form-group">
-                    <label for="stdbirth"> 생 일 </label>
-                    <input type="date" name="stdbirth" id="stdbirth" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-light">등록</button>
-                <button type="button" onclick="location.href='/student'" class="btn btn-light">돌아가기</button>
+                <button type="submit" class="btn btn-light">Request</button>
+                <button type="button" onclick="location.href='/student'" class="btn btn-light">Cancel</button>
             </form>
         </div>
     </div>
