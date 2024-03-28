@@ -1,12 +1,13 @@
 # app.py
 import os
 from flask import Flask, render_template, redirect, request
-import psycopg2
+import MySQLdb
 import time
-import os
 
-port = int(os.environ.get("PORT", 5000))
 app = Flask(__name__)
+
+# MySQL 연결 설정
+conn = MySQLdb.connect(host='AmyJeong.mysql.pythonanywhere-services.com', user='AmyJeong', passwd='flaskmanagement', db='AmyJeong$Flask_management')
 
 @app.route('/')
 def index():
@@ -14,20 +15,18 @@ def index():
 
 @app.route('/rqt')
 def rqt():
-    db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                          password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-    cursor = db.cursor()
+    cursor = conn.cursor()
 
     # 페이지 값 (디폴트값 = 1)
     page = request.args.get("page", 1, type=int)
     # 한 페이지당 개수
     per_page = 5
     # 전체 페이지 구하기
-    cursor.execute("SELECT COUNT(*) from public.request")
+    cursor.execute("SELECT COUNT(*) from request")
     tot_count = cursor.fetchone()[0]
     total_page = int(tot_count / per_page) + 1
 
-    query = "SELECT * FROM public.request LIMIT %s OFFSET %s;"
+    query = "SELECT * FROM request LIMIT %s OFFSET %s;"
     cursor.execute(query, (per_page, (page-1) * per_page))
     data_list = cursor.fetchall()
     print(data_list)
@@ -40,7 +39,7 @@ def rqt():
     block_start = (block_size * block_num) + 1
     # 현재 블럭의 맨 끝 페이지 넘버 (첫 번째 블럭이라면, block_end = 5)
     block_end = block_start + (block_size - 1)
-    db.close()
+    cursor.close()
     return render_template("rqt.html",data_list=data_list,per_page=per_page,page=page,
                            block_start=block_start,block_end=block_end,total_page=total_page,tot_count=tot_count)
 
@@ -65,39 +64,33 @@ def rqtinsert():
         ## 넘겨받은 request_member
         request_member = request.form.get('request_member')
 
-        sql = "INSERT INTO PUBLIC.REQUEST (BASE_DATE, REQUEST_DELIVERY_DATE, REQUEST_TITLE, REQUEST_PURPOSE, REQUEST_TEAM, REQUEST_MEMBER, REQUEST_DATE) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        sql = "INSERT INTO REQUEST (BASE_DATE, REQUEST_DELIVERY_DATE, REQUEST_TITLE, REQUEST_PURPOSE, REQUEST_TEAM, REQUEST_MEMBER, REQUEST_DATE) VALUES (%s,%s,%s,%s,%s,%s,%s)"
 
-        db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                              password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-        cursor = db.cursor()
+        cursor = conn.cursor()
         cursor.execute(sql,(time.strftime('%Y-%m-%d'), request_delivery_date, request_title, request_purpose, request_team, request_member, time.strftime('%Y-%m-%d %H:%M:%S')))
-        db.commit()
-        db.close()
+        cursor.commit()
+        cursor.close()
 
         return redirect('/rqt')
 
 @app.route("/rqtdelete/<id>")
 def rqtdelete(id):
-    sql = "DELETE FROM PUBLIC.REQUEST WHERE request_id = "+id
-    db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                          password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-    cursor = db.cursor()
+    sql = "DELETE FROM REQUEST WHERE request_id = "+id
+    cursor = conn.cursor()
     cursor.execute(sql)
-    db.commit()
-    db.close()
+    cursor.commit()
+    cursor.close()
     return redirect('/rqt')
 
 @app.route("/rqtupdate/<id>", methods=["GET", "POST"])
 def rqtupdate(id):
-    sql = "SELECT * FROM public.request WHERE request_id = "+id
-    db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                          password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-    cursor = db.cursor()
+    sql = "SELECT * FROM request WHERE request_id = "+id
+    cursor = conn.cursor()
     cursor.execute(sql)
     data_list = cursor.fetchall()
 
     if request.method == "GET":
-        db.close()
+        cursor.close()
         return render_template("rqtupdateform.html", data_list=data_list)
     elif request.method == 'POST':
         ## 넘겨받은 request_delivery_date
@@ -115,18 +108,16 @@ def rqtupdate(id):
         ## 넘겨받은 file_link
         file_link = request.form.get('file_link')
 
-        sql = "UPDATE public.request SET request_delivery_date=%s,request_title=%s,request_purpose=%s,request_team=%s,request_member=%s,request_executor=%s,file_link=%s WHERE request_id = "+id
+        sql = "UPDATE request SET request_delivery_date=%s,request_title=%s,request_purpose=%s,request_team=%s,request_member=%s,request_executor=%s,file_link=%s WHERE request_id = "+id
         cursor.execute(sql,(request_delivery_date, request_title, request_purpose, request_team, request_member, request_executor, file_link))
-        db.commit()
-        db.close()
+        cursor.commit()
+        cursor.close()
 
         return redirect('/rqt')
 
 @app.route('/lecture')
 def lecture():
-    db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                          password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-    cursor = db.cursor()
+    cursor = conn.cursor()
 
     # 페이지 값 (디폴트값 = 1)
     page = request.args.get("page", 1, type=int)
@@ -151,18 +142,16 @@ def lecture():
     # 현재 블럭의 맨 끝 페이지 넘버 (첫 번째 블럭이라면, block_end = 5)
     block_end = block_start + (block_size - 1)
 
-    db.close()
+    cursor.close()
     return render_template("lecture.html",data_list=data_list,per_page=per_page,page=page,
                            block_start=block_start,block_end=block_end,total_page=total_page,tot_count=tot_count)
 
 @app.route('/lectureinsertform')
 def lectureinsertform():
-    db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                          password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-    cursor = db.cursor()
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM teacher")
     data_list = cursor.fetchall()
-    db.close()
+    cursor.close()
     return render_template('lectureinsertform.html',data_list=data_list)
 
 @app.route('/lectureinsert', methods=['POST', 'GET'])
@@ -170,9 +159,7 @@ def lectureinsert():
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
-        db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                              password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-        cursor = db.cursor()
+        cursor = conn.cursor()
 
         ## 넘겨받은 lecturename
         lecturename = request.form.get('lecturename')
@@ -185,35 +172,31 @@ def lectureinsert():
         sql = "INSERT INTO lecture (lecture_name,lecture_teacher) VALUES (%s,%s)"
 
         cursor.execute(sql,(lecturename, lectureteacher))
-        db.commit()
-        db.close()
+        cursor.commit()
+        cursor.close()
 
         return redirect('/lecture')
 
 @app.route("/lecturedelete/<id>")
 def lecturedelete(id):
     sql = "DELETE FROM lecture WHERE lecture_id = "+id
-    db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                          password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-    cursor = db.cursor()
+    cursor = conn.cursor()
     cursor.execute(sql)
-    db.commit()
-    db.close()
+    cursor.commit()
+    cursor.close()
     return redirect('/lecture')
 
 @app.route("/lectureupdate/<id>", methods=["GET", "POST"])
 def lectureupdate(id):
     sql = "SELECT * FROM lecture WHERE lecture_id = "+id
-    db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                          password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-    cursor = db.cursor()
+    cursor = conn.cursor()
     cursor.execute(sql)
     data_list = cursor.fetchall()
     cursor.execute("SELECT * FROM teacher")
     teacher_list = cursor.fetchall()
 
     if request.method == "GET":
-        db.close()
+        cursor.close()
         return render_template("lectureupdateform.html", data_list=data_list, teacher_list=teacher_list)
     elif request.method == 'POST':
         ## 넘겨받은 lecturename
@@ -226,16 +209,14 @@ def lectureupdate(id):
 
         sql = "UPDATE lecture SET lecture_name=%s,lecture_teacher=%s WHERE lecture_id = "+id
         cursor.execute(sql,(lecturename, lectureteacher))
-        db.commit()
-        db.close()
+        cursor.commit()
+        cursor.close()
 
         return redirect('/lecture')
 
 @app.route('/teacher')
 def teacher():
-    db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                          password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-    cursor = db.cursor()
+    cursor = conn.cursor()
 
     # 페이지 값 (디폴트값 = 1)
     page = request.args.get("page", 1, type=int)
@@ -260,7 +241,7 @@ def teacher():
     # 현재 블럭의 맨 끝 페이지 넘버 (첫 번째 블럭이라면, block_end = 5)
     block_end = block_start + (block_size - 1)
 
-    db.close()
+    cursor.close()
     return render_template("teacher.html",data_list=data_list,per_page=per_page,page=page,
                            block_start=block_start,block_end=block_end,total_page=total_page,tot_count=tot_count)
 
@@ -279,37 +260,31 @@ def teacherinsert():
 
         sql = "INSERT INTO teacher (teacher_name) VALUES (%s)"
 
-        db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                              password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-        cursor = db.cursor()
+        cursor = conn.cursor()
         cursor.execute(sql,(teachername))
-        db.commit()
-        db.close()
+        cursor.commit()
+        cursor.close()
 
         return redirect('/teacher')
 
 @app.route("/teacherdelete/<id>")
 def teacherdelete(id):
     sql = "DELETE FROM teacher WHERE teacher_id = "+id
-    db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                          password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-    cursor = db.cursor()
+    cursor = conn.cursor()
     cursor.execute(sql)
-    db.commit()
-    db.close()
+    cursor.commit()
+    cursor.close()
     return redirect('/teacher')
 
 @app.route("/teacherupdate/<id>", methods=["GET", "POST"])
 def teacherupdate(id):
     sql = "SELECT * FROM teacher WHERE teacher_id = "+id
-    db = psycopg2.connect(host='ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',dbname='d8mhls4ld7f91n',user='ucbtjkf2fe2uut',
-                          password='pf0d11ba603cb9ea413da2f960da98eb1b810dfd9cfb45129ca98a563a3be9295',port='5432')
-    cursor = db.cursor()
+    cursor = conn.cursor()
     cursor.execute(sql)
     data_list = cursor.fetchall()
 
     if request.method == "GET":
-        db.close()
+        cursor.close()
         return render_template("teacherupdateform.html", data_list=data_list)
     elif request.method == 'POST':
         ## 넘겨받은 teachername
@@ -318,10 +293,10 @@ def teacherupdate(id):
 
         sql = "UPDATE teacher SET teacher_name=%s WHERE teacher_id = "+id
         cursor.execute(sql,(teachername))
-        db.commit()
-        db.close()
+        cursor.commit()
+        cursor.close()
 
         return redirect('/teacher')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True)
