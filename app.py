@@ -22,11 +22,11 @@ def rqt():
     # 한 페이지당 개수
     per_page = 5
     # 전체 페이지 구하기
-    cursor.execute("SELECT COUNT(*) from request")
+    cursor.execute("SELECT COUNT(*) FROM RQT")
     tot_count = cursor.fetchone()[0]
     total_page = int(tot_count / per_page) + 1
 
-    query = "SELECT * FROM request LIMIT %s OFFSET %s;"
+    query = "SELECT * FROM RQT ORDER BY BASE_DATE DESC LIMIT %s OFFSET %s;"
     cursor.execute(query, (per_page, (page-1) * per_page))
     data_list = cursor.fetchall()
     print(data_list)
@@ -64,27 +64,27 @@ def rqtinsert():
         ## 넘겨받은 request_member
         request_member = request.form.get('request_member')
 
-        sql = "INSERT INTO REQUEST (BASE_DATE, REQUEST_DELIVERY_DATE, REQUEST_TITLE, REQUEST_PURPOSE, REQUEST_TEAM, REQUEST_MEMBER, REQUEST_DATE) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        sql = "INSERT INTO RQT (BASE_DATE, REQUEST_DELIVERY_DATE, REQUEST_TITLE, REQUEST_PURPOSE, REQUEST_TEAM, REQUEST_MEMBER, REQUEST_DATE) VALUES (%s,%s,%s,%s,%s,%s,%s)"
 
         cursor = conn.cursor()
         cursor.execute(sql,(time.strftime('%Y-%m-%d'), request_delivery_date, request_title, request_purpose, request_team, request_member, time.strftime('%Y-%m-%d %H:%M:%S')))
-        cursor.commit()
+        conn.commit()
         cursor.close()
 
         return redirect('/rqt')
 
 @app.route("/rqtdelete/<id>")
 def rqtdelete(id):
-    sql = "DELETE FROM REQUEST WHERE request_id = "+id
+    sql = "DELETE FROM RQT WHERE REQUEST_ID = "+id
     cursor = conn.cursor()
     cursor.execute(sql)
-    cursor.commit()
+    conn.commit()
     cursor.close()
     return redirect('/rqt')
 
 @app.route("/rqtupdate/<id>", methods=["GET", "POST"])
 def rqtupdate(id):
-    sql = "SELECT * FROM request WHERE request_id = "+id
+    sql = "SELECT * FROM RQT WHERE REQUEST_ID = "+id
     cursor = conn.cursor()
     cursor.execute(sql)
     data_list = cursor.fetchall()
@@ -108,9 +108,9 @@ def rqtupdate(id):
         ## 넘겨받은 file_link
         file_link = request.form.get('file_link')
 
-        sql = "UPDATE request SET request_delivery_date=%s,request_title=%s,request_purpose=%s,request_team=%s,request_member=%s,request_executor=%s,file_link=%s WHERE request_id = "+id
+        sql = "UPDATE RQT SET request_delivery_date=%s,request_title=%s,request_purpose=%s,request_team=%s,request_member=%s,request_executor=%s,file_link=%s WHERE request_id = "+id
         cursor.execute(sql,(request_delivery_date, request_title, request_purpose, request_team, request_member, request_executor, file_link))
-        cursor.commit()
+        conn.commit()
         cursor.close()
 
         return redirect('/rqt')
@@ -172,7 +172,7 @@ def lectureinsert():
         sql = "INSERT INTO lecture (lecture_name,lecture_teacher) VALUES (%s,%s)"
 
         cursor.execute(sql,(lecturename, lectureteacher))
-        cursor.commit()
+        conn.commit()
         cursor.close()
 
         return redirect('/lecture')
@@ -182,7 +182,7 @@ def lecturedelete(id):
     sql = "DELETE FROM lecture WHERE lecture_id = "+id
     cursor = conn.cursor()
     cursor.execute(sql)
-    cursor.commit()
+    conn.commit()
     cursor.close()
     return redirect('/lecture')
 
@@ -209,7 +209,7 @@ def lectureupdate(id):
 
         sql = "UPDATE lecture SET lecture_name=%s,lecture_teacher=%s WHERE lecture_id = "+id
         cursor.execute(sql,(lecturename, lectureteacher))
-        cursor.commit()
+        conn.commit()
         cursor.close()
 
         return redirect('/lecture')
@@ -262,7 +262,7 @@ def teacherinsert():
 
         cursor = conn.cursor()
         cursor.execute(sql,(teachername))
-        cursor.commit()
+        conn.commit()
         cursor.close()
 
         return redirect('/teacher')
@@ -272,7 +272,7 @@ def teacherdelete(id):
     sql = "DELETE FROM teacher WHERE teacher_id = "+id
     cursor = conn.cursor()
     cursor.execute(sql)
-    cursor.commit()
+    conn.commit()
     cursor.close()
     return redirect('/teacher')
 
@@ -293,7 +293,7 @@ def teacherupdate(id):
 
         sql = "UPDATE teacher SET teacher_name=%s WHERE teacher_id = "+id
         cursor.execute(sql,(teachername))
-        cursor.commit()
+        conn.commit()
         cursor.close()
 
         return redirect('/teacher')
