@@ -22,11 +22,11 @@ def rqt():
     # 한 페이지당 개수
     per_page = 5
     # 전체 페이지 구하기
-    cursor.execute("SELECT COUNT(*) FROM RQT")
+    cursor.execute("SELECT COUNT(*) FROM rqt")
     tot_count = cursor.fetchone()[0]
     total_page = int(tot_count / per_page) + 1
 
-    query = "SELECT * FROM RQT ORDER BY BASE_DATE DESC LIMIT %s OFFSET %s;"
+    query = "SELECT * FROM rqt ORDER BY BASE_DATE DESC LIMIT %s OFFSET %s;"
     cursor.execute(query, (per_page, (page-1) * per_page))
     data_list = cursor.fetchall()
     print(data_list)
@@ -64,7 +64,7 @@ def rqtinsert():
         ## 넘겨받은 request_member
         request_member = request.form.get('request_member')
 
-        sql = "INSERT INTO RQT (BASE_DATE, REQUEST_DELIVERY_DATE, REQUEST_TITLE, REQUEST_PURPOSE, REQUEST_TEAM, REQUEST_MEMBER, REQUEST_DATE) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+        sql = "INSERT INTO rqt (BASE_DATE, REQUEST_DELIVERY_DATE, REQUEST_TITLE, REQUEST_PURPOSE, REQUEST_TEAM, REQUEST_MEMBER, REQUEST_DATE) VALUES (%s,%s,%s,%s,%s,%s,%s)"
 
         cursor = conn.cursor()
         cursor.execute(sql,(time.strftime('%Y-%m-%d'), request_delivery_date, request_title, request_purpose, request_team, request_member, time.strftime('%Y-%m-%d %H:%M:%S')))
@@ -75,7 +75,7 @@ def rqtinsert():
 
 @app.route("/rqtdelete/<id>")
 def rqtdelete(id):
-    sql = "DELETE FROM RQT WHERE REQUEST_ID = "+id
+    sql = "DELETE FROM rqt WHERE REQUEST_ID = "+id
     cursor = conn.cursor()
     cursor.execute(sql)
     conn.commit()
@@ -84,7 +84,7 @@ def rqtdelete(id):
 
 @app.route("/rqtupdate/<id>", methods=["GET", "POST"])
 def rqtupdate(id):
-    sql = "SELECT * FROM RQT WHERE REQUEST_ID = "+id
+    sql = "SELECT * FROM rqt WHERE REQUEST_ID = "+id
     cursor = conn.cursor()
     cursor.execute(sql)
     data_list = cursor.fetchall()
@@ -108,15 +108,15 @@ def rqtupdate(id):
         ## 넘겨받은 file_link
         file_link = request.form.get('file_link')
 
-        sql = "UPDATE RQT SET request_delivery_date=%s,request_title=%s,request_purpose=%s,request_team=%s,request_member=%s,request_executor=%s,file_link=%s WHERE request_id = "+id
+        sql = "UPDATE rqt SET request_delivery_date=%s,request_title=%s,request_purpose=%s,request_team=%s,request_member=%s,request_executor=%s,file_link=%s WHERE request_id = "+id
         cursor.execute(sql,(request_delivery_date, request_title, request_purpose, request_team, request_member, request_executor, file_link))
         conn.commit()
         cursor.close()
 
         return redirect('/rqt')
 
-@app.route('/lecture')
-def lecture():
+@app.route('/guide')
+def guide():
     cursor = conn.cursor()
 
     # 페이지 값 (디폴트값 = 1)
