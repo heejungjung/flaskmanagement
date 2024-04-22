@@ -1,21 +1,17 @@
-# 💛 codestates 학생 관리 💜
+# 💛 Data Request Management Website 💜
 > Flask
 
 😉 [Come visit!](http://amyjeong.pythonanywhere.com/)
 
-## ✨ DB ✨
-![DB](https://user-images.githubusercontent.com/28649385/110238134-2699f780-7f83-11eb-8f76-d70366253efb.JPG)
-
 ## ✨ Screenshots ✨
+#### Home
+![main](https://github.com/heejungjung/flaskmanagement/assets/28649385/95dcea5c-6b93-4b3c-b101-19cd9da68827)
 
-#### 홈
-![main](https://user-images.githubusercontent.com/28649385/110152659-5c28ce80-7e25-11eb-9514-8f254b35fb58.JPG)
-
-#### 데이터 요청 관리
-![요청등록](https://user-images.githubusercontent.com/28649385/110152731-6cd94480-7e25-11eb-9664-e87c0f436aa6.JPG)
-![요청수정](https://user-images.githubusercontent.com/28649385/110153797-da39a500-7e26-11eb-8b2d-d58afa9974a8.JPG)
-![요청삭제](https://user-images.githubusercontent.com/28649385/110153797-da39a500-7e26-11eb-8b2d-d58afa9974a8.JPG)
-![결과파일 다운로드](https://user-images.githubusercontent.com/28649385/110153797-da39a500-7e26-11eb-8b2d-d58afa9974a8.JPG)
+#### Data Request List
+![list](https://github.com/heejungjung/flaskmanagement/assets/28649385/07346cf2-2049-47c3-9ccc-f45a77b4d497)
+![create](https://github.com/heejungjung/flaskmanagement/assets/28649385/2260ad87-6102-4ef8-93b8-2b42dd90ce01)
+![create](https://user-images.githubusercontent.com/28649385/110153797-da39a500-7e26-11eb-8b2d-d58afa9974a8.JPG)
+![edit](https://github.com/heejungjung/flaskmanagement/assets/28649385/f6a327f2-0974-485a-957f-0d96485de97d)
 
 ## 🔖 Information 🔖
 
