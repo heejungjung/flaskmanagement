@@ -1,4 +1,5 @@
 # app.py
+from dotenv import load_dotenv
 import os
 from flask import Flask, render_template, redirect, request
 import MySQLdb
@@ -6,8 +7,13 @@ import time
 
 app = Flask(__name__)
 
+DB_HOST = os.environ.get('DB_HOST')
+DB_USER = os.environ.get('DB_USER')
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
+DB_DATABASE = os.environ.get('DB_DATABASE')
+
 # MySQL 연결 설정
-conn = MySQLdb.connect(host='AmyJeong.mysql.pythonanywhere-services.com', user='AmyJeong', passwd='flaskmanagement', db='AmyJeong$Flask_management')
+conn = MySQLdb.connect(host=DB_HOST, user=DB_USER, passwd=DB_PASSWORD, db=DB_DATABASE)
 
 @app.route('/')
 def index():
