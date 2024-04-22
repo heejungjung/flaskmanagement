@@ -25,6 +25,27 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      - name: .env File create # 실행 이름
+        # env파일이 없다면 생성하고, 해당 문자열의 값을 넣는다,
+        # $변수   같은 경우 아래의 환경 변수에 따라 값을 받아온다.
+        run: |
+          echo "DB_HOST=$DB_HOST" >> .env
+          echo "DB_USER=$DB_USER" >> .env
+          echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+          echo "DB_DATABASE=$DB_DATABASE" >> .env
+          echo "PAW_USER=$PAW_USER" >> .env
+          echo "PAW_API=$PAW_API" >> .env
+          echo "PAW_DOMAIN=$PAW_DOMAIN" >> .env
+        env:
+        # github Secrets 변수값 가져와 설정
+          DB_HOST: ${{secrets.DB_HOST}}
+          DB_USER: ${{secrets.DB_USER}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+          DB_DATABASE: ${{secrets.DB_DATABASE}}
+          PAW_USER: ${{secrets.PAW_USER}}
+          PAW_API: ${{secrets.PAW_API}}
+          PAW_DOMAIN: ${{secrets.PAW_DOMAIN}}
+
       # Runs a single command using the runners shell
       - name: Install Dependencies
         run: |
@@ -36,6 +57,6 @@ jobs:
         uses: jensvog/pythonanywhere-webapp-reload-action@v1
         with:
           host: 'www.pythonanywhere.com'
-          username: ${{ secrets.PA_USER }}
-          api-token: ${{ secrets.PA_API_TOKEN }}
+          username: ${{ secrets.PAW_USER }}
+          api-token: ${{ secrets.PAW_API }}
           domain-name: amyjeong.pythonanywhere.com
