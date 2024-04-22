@@ -22,9 +22,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
       - name: .env File create # 실행 이름
         # env파일이 없다면 생성하고, 해당 문자열의 값을 넣는다,
         # $변수   같은 경우 아래의 환경 변수에 따라 값을 받아온다.
@@ -45,6 +42,9 @@ jobs:
           PAW_USER: ${{secrets.PAW_USER}}
           PAW_API: ${{secrets.PAW_API}}
           PAW_DOMAIN: ${{secrets.PAW_DOMAIN}}
+          
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
 
       # Runs a single command using the runners shell
       - name: Install Dependencies
@@ -57,6 +57,6 @@ jobs:
         uses: jensvog/pythonanywhere-webapp-reload-action@v1
         with:
           host: 'www.pythonanywhere.com'
-          username: ${{ secrets.PAW_USER }}
-          api-token: ${{ secrets.PAW_API }}
+          username: ${{ secrets.PA_USER }}
+          api-token: ${{ secrets.PA_API_TOKEN }}
           domain-name: amyjeong.pythonanywhere.com
